@@ -15,7 +15,7 @@ const createMessage = async(request, response)=>{
         io.emit('chat message', createMessageData?.message);
     
         response.status(201).json({
-          message: 'Message posted successfully!',
+          message: 'Message created successfully!',
           data: result,
         });
       } catch (error) {
