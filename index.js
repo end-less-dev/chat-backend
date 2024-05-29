@@ -3,6 +3,7 @@ const app = require("./app");
 const { Server } = require('socket.io');
 const attachIO = require('./middleware/attachIo');
 const models = require("./models")
+const { uuid } = require('uuidv4');
 
 const server = http.createServer(app);
 
@@ -22,12 +23,26 @@ io.on("connection",async (socket) => {
     console.log("user disconnected");
   });
 
-  const prevMsg = await models.Message.findAll({ order: [['createdAt', 'ASC']] })
+  socket.on('previous message', async (userId) => {
+    try {
+      const prevMsgs = await models.Message.findAll({ where: { userId } });
+      socket.emit('previous messages', prevMsgs); // Send the messages back to the client
+      console.log("previous messages", prevMsgs);
+    } catch (error) {
+      console.error("Error fetching previous messages:", error);
+    }
+  });
 
-  socket.emit('previous messages', prevMsg);
-  socket.on("chat message", (message) => {
-    console.log("message", message);
-    socket.emit("chat message", message);
+  // socket.emit('previous messages', prevMsg);
+  socket.on("chat message", async (message) => {
+    const createMessageData = {
+      messageId: uuid(),
+      message: message.message,
+      userId: message.userId
+  }
+    const result = await models.Message.create(createMessageData);
+    console.log("message", result, message);
+    // socket.emit("chat message", message);
   });
 });
 
