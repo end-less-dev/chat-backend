@@ -86,9 +86,41 @@ const getUserByUserId = async (request, response)=>{
   }
 }
 
+
+const userLogin = async(request, response)=>{
+  const credentials = {
+    userName : request.body.userName,
+    password : request.body.password
+  }
+  console.log(credentials,"cred")
+  try {
+    const result = await models.User.findOne({where : {userName : credentials.userName}}).then((user)=>{
+      console.log("user", user)
+      if (user && user.password === credentials.password) {
+        response.status(201).json({
+          message : "Successfully logged in",
+          data : user
+        })
+      }else{
+        response.status(401).json({
+          message : "Invalid credential",
+          data : user
+        })
+      }
+    })
+  } catch (error) {
+    console.log("error", error)
+    response.status(500).json({
+      error : error,
+      message : "Something's not right"
+    })
+  }
+}
+
 module.exports = {
     createUser : createUser,
     getAllUsers : getAllUsers,
     updateUser : updateUser,
-    getUserByUserId : getUserByUserId
+    getUserByUserId : getUserByUserId,
+    userLogin :  userLogin
 }
