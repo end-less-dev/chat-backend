@@ -103,8 +103,7 @@ const userLogin = async(request, response)=>{
         })
       }else{
         response.status(401).json({
-          message : "Invalid credential",
-          data : user
+          message : "Invalid credential"
         })
       }
     })
