@@ -42,7 +42,7 @@ io.on("connection",async (socket) => {
   }
     const result = await models.Message.create(createMessageData);
     console.log("message", result, message);
-    // socket.emit("chat message", message);
+    socket.emit("chat message", message);
   });
 });
 
