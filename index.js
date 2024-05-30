@@ -25,9 +25,10 @@ io.on("connection",async (socket) => {
 
   socket.on('previous message', async (userId) => {
     try {
-      const prevMsgs = await models.Message.findAll({ where: { userId } });
+      // const prevMsgs = await models.Message.findAll({ where: { userId } });
+      const prevMsgs = await models.Message.findAll()
       socket.emit('previous messages', prevMsgs); // Send the messages back to the client
-      console.log("previous messages", prevMsgs);
+      // console.log("previous messages", prevMsgs);
     } catch (error) {
       console.error("Error fetching previous messages:", error);
     }
