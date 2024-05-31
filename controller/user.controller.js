@@ -99,7 +99,8 @@ const userLogin = async(request, response)=>{
       if (user && user.password === credentials.password) {
         response.status(201).json({
           message : "Successfully logged in",
-          data : user
+          data : user,
+          isConfirmed  : true
         })
       }else{
         response.status(401).json({
